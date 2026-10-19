@@ -4,7 +4,7 @@
 .app.pip-asleep .sleepy-eyelid,
 .pip-stage.is-asleep .sleepy-eyelid {
   opacity: 1 !important;
-  transform: translate(-50%, -50%) scaleY(1) !important;
+  transform: translate(-50%, -50%) rotate(var(--eyelid-rot, 0deg)) scaleY(1) !important;
 }
 
 .app.pip-asleep .floating-zzz-group,
