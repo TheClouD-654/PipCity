@@ -1,13 +1,13 @@
-# Pip — Midnight Nursery ☾
+# Pip — PipCity
 
 > **haX.baby "Baby's First Website" Hackathon — Track 1: Pip the Skull Baby**  
-> *A cozy, handcrafted midnight nursery portfolio for a Junior Dream Engineer.*
+> *A cozy, handcrafted PipCity portfolio for a Junior Dream Engineer.*
 
 ---
 
 ## What the Site Is
 
-**Midnight Nursery** is an interactive character portfolio and bedtime sanctuary designed for **Pip the Skull Baby**, who works late at night as a **Junior Dream Engineer**. While the world is asleep, Pip crafts soothing music-box lullabies, tests reassuring nightlights, and maps quiet rooftop delivery routes so every dream finds its window before dawn.
+**PipCity** is an interactive character portfolio and bedtime sanctuary designed for **Pip the Skull Baby**, who works late at night as a **Junior Dream Engineer**. While the world is asleep, Pip crafts soothing music-box lullabies, tests reassuring nightlights, and maps quiet rooftop delivery routes so every dream finds its window before dawn.
 
 Rooted in the tactile charm of early-web craft and warm editorial design, the project deliberately avoids generic SaaS layouts or cold templates. Every detail—from cursor-following eye glints to real-time Web Audio chimes, 3D WebGL starfields, and ambient illumination—is hand-tuned to create a warm, lived-in world that judges and visitors will remember.
 
