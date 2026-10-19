@@ -6,12 +6,6 @@ const MEMORY_KEY = 'pip:night-desk-memory';
 const WISH_KEY = 'pip:dream-wishes';
 const MAX_WISHES = 40;
 
-const SEED_WISHES = [
-  { id: 'seed-1', name: 'Mira', text: 'That my little brother sleeps through the thunder.', when: 'night 004', glyph: '☾' },
-  { id: 'seed-2', name: 'Tomas', text: 'A dream where the commute is a train made of clouds.', when: 'night 005', glyph: '✦' },
-  { id: 'seed-3', name: 'Ines', text: 'Please water my plants while I dream.', when: 'night 006', glyph: '♫' },
-];
-
 function loadJSON(key, fallback) {
   if (typeof window === 'undefined') return fallback;
   try {
@@ -40,7 +34,7 @@ function formatWhen() {
 
 export default function NightDesk({ onToast }) {
   const [memory, setMemory] = useState({});
-  const [wishes, setWishes] = useState(SEED_WISHES);
+  const [wishes, setWishes] = useState([]);
   const [wishName, setWishName] = useState('');
   const [wishText, setWishText] = useState('');
   const [justLeft, setJustLeft] = useState(false);
@@ -55,7 +49,18 @@ export default function NightDesk({ onToast }) {
 
     const storedWishes = loadJSON(WISH_KEY, []);
     if (Array.isArray(storedWishes) && storedWishes.length) {
-      setWishes([...storedWishes, ...SEED_WISHES].slice(0, MAX_WISHES));
+      // Clean out any hardcoded seed entries that may have been previously stored
+      const cleanWishes = storedWishes.filter(
+        (w) =>
+          !w.id?.startsWith('seed-') &&
+          w.name !== 'Mira' &&
+          w.name !== 'Tomas' &&
+          w.name !== 'Ines'
+      );
+      setWishes(cleanWishes.slice(0, MAX_WISHES));
+      saveJSON(WISH_KEY, cleanWishes.slice(0, MAX_WISHES));
+    } else {
+      setWishes([]);
     }
   }, []);
 
@@ -74,10 +79,9 @@ export default function NightDesk({ onToast }) {
       mine: true,
     };
 
-    const mine = wishes.filter((w) => w.mine);
-    const nextWishes = [wish, ...mine, ...SEED_WISHES].slice(0, MAX_WISHES);
+    const nextWishes = [wish, ...wishes.filter((w) => w.id !== wish.id)].slice(0, MAX_WISHES);
     setWishes(nextWishes);
-    saveJSON(WISH_KEY, [wish, ...mine].slice(0, MAX_WISHES));
+    saveJSON(WISH_KEY, nextWishes);
 
     const nextMemory = { ...memory, name: cleanName, lastWish: wish.id, wishesLeft: (memory.wishesLeft || 0) + 1 };
     saveJSON(MEMORY_KEY, nextMemory);
@@ -105,7 +109,7 @@ export default function NightDesk({ onToast }) {
         <form className="desk-panel desk-wish" onSubmit={handleWishSubmit}>
           <div className="desk-panel__top">
             <span className="desk-panel__label"><Sparkles size={13} /> dream guestbook</span>
-            <span className="desk-wish__count">{wishes.length} wishes</span>
+            <span className="desk-wish__count">{wishes.length} {wishes.length === 1 ? 'wish' : 'wishes'}</span>
           </div>
 
           <p className="desk-wish__intro">
@@ -145,16 +149,22 @@ export default function NightDesk({ onToast }) {
           </p>
 
           <div className="desk-wish__wall">
-            {wishes.slice(0, 5).map((wish) => (
-              <article key={wish.id} className={`wish-card ${wish.mine ? 'wish-card--mine' : ''}`}>
-                <span className="wish-card__glyph" aria-hidden="true">{wish.glyph}</span>
-                <p className="wish-card__text">{wish.text}</p>
-                <div className="wish-card__meta">
-                  <span className="wish-card__name">{wish.name}</span>
-                  <span>{wish.when}</span>
-                </div>
-              </article>
-            ))}
+            {wishes.length === 0 ? (
+              <div className="desk-wish__empty">
+                <p>no wishes pinned yet. be the first to leave one on the wall. ✦</p>
+              </div>
+            ) : (
+              wishes.slice(0, 5).map((wish) => (
+                <article key={wish.id} className={`wish-card ${wish.mine ? 'wish-card--mine' : ''}`}>
+                  <span className="wish-card__glyph" aria-hidden="true">{wish.glyph}</span>
+                  <p className="wish-card__text">{wish.text}</p>
+                  <div className="wish-card__meta">
+                    <span className="wish-card__name">{wish.name}</span>
+                    <span>{wish.when}</span>
+                  </div>
+                </article>
+              ))
+            )}
           </div>
         </form>
       </div>

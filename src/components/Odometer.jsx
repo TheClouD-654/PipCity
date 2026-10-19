@@ -8,7 +8,7 @@ const STORAGE_KEY = 'pip-dreams-delivered';
    Set it to 0 for a fresh production launch; localStorage on each
    visitor's device only ever ADDS to it (never below INITIAL_COUNT).
    Changes here require a rebuild (npm run build) to take effect. */
-const INITIAL_COUNT = 1204;
+const INITIAL_COUNT = 0;
 
 export function getDreamsCount() {
   if (typeof window === 'undefined') return INITIAL_COUNT;
@@ -16,8 +16,15 @@ export function getDreamsCount() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw !== null) {
       const parsed = parseInt(raw, 10);
-      if (!isNaN(parsed) && parsed >= INITIAL_COUNT) {
-        return parsed;
+      if (!isNaN(parsed)) {
+        // Reset pre-release development seed tally (1204)
+        if (parsed >= 1200 && parsed <= 1250) {
+          localStorage.setItem(STORAGE_KEY, String(INITIAL_COUNT));
+          return INITIAL_COUNT;
+        }
+        if (parsed >= INITIAL_COUNT) {
+          return parsed;
+        }
       }
     }
   } catch {}

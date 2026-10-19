@@ -123,6 +123,21 @@
   scrollbar-color: var(--line) transparent;
 }
 
+.desk-wish__empty {
+  padding: 18px 14px;
+  text-align: center;
+  font: 11px/1.6 'DM Mono', monospace;
+  color: var(--brown-soft);
+  opacity: 0.85;
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--paper) 60%, var(--cream-deep));
+}
+
+.desk-wish__empty p {
+  margin: 0;
+}
+
 .wish-card {
   position: relative;
   padding: 10px 12px 9px;
