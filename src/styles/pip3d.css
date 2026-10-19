@@ -1,0 +1,88 @@
+/* ── Pip in 3D (WebGL) ───────────────────────────── */
+
+.pip3d {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(255, 233, 190, .5) 0%, transparent 62%),
+    linear-gradient(180deg, #2b2436 0%, #201b28 58%, #362a3d 100%);
+  overflow: hidden;
+}
+
+.app.dream-mode .pip3d {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(225, 123, 158, .28) 0%, transparent 62%),
+    linear-gradient(180deg, #241d2d 0%, #1b1622 58%, #32263a 100%);
+}
+
+.pip3d__stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.pip3d__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  cursor: grab;
+  touch-action: pan-y;
+  outline: none;
+}
+
+.pip3d__canvas:active { cursor: grabbing; }
+.pip3d__canvas:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: -6px;
+}
+
+.pip3d__fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity .7s ease;
+}
+
+.pip3d.is-ready .pip3d__fallback { opacity: 0; pointer-events: none; }
+
+.pip3d__loading {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 8px/1.4 'DM Mono', monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255, 248, 241, .62);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.pip3d__hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(32, 27, 40, .5);
+  border: 1px solid rgba(255, 248, 241, .18);
+  font: 8px/1.2 'DM Mono', monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255, 248, 241, .8);
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+.pip3d.is-ready:hover .pip3d__hint { opacity: .55; }
+
+/* Keep the rotated storybook card from clipping the canvas. */
+.intro-card .pip3d { border: 1px solid var(--line); }

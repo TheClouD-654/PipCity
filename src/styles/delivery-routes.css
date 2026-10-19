@@ -1,0 +1,80 @@
+/* Dream Delivery Routes Polish Styles */
+
+.route-delivery-marker {
+  pointer-events: none;
+  transition: transform 0.08s linear;
+  /* SVG transforms use user-space coordinates from 0 0, not the viewBox centre. */
+  transform-origin: 0 0;
+}
+
+.route-delivery-marker .marker-halo {
+  fill: rgba(255, 217, 120, 0.45);
+  filter: drop-shadow(0 0 10px rgba(255, 217, 120, 0.95));
+  animation: planeHaloBreathe 2.4s ease-in-out infinite;
+}
+
+.route-delivery-marker .marker-plane-base {
+  fill: #ffd978;
+  stroke: #5c4033;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.route-delivery-marker .marker-plane-top {
+  fill: #fffdf9;
+  stroke: #5c4033;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.route-delivery-marker .marker-plane-spine {
+  stroke: #a34063;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.route-delivery-marker .marker-plane-sparkle {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 4px #ffd978);
+  animation: planeSparklePulse 1.8s ease-in-out infinite;
+}
+
+.route-delivery-marker .marker-moon-path {
+  fill: #fffdf2;
+  stroke: #d8a94e;
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 8px rgba(255, 217, 120, 0.9));
+}
+
+@keyframes planeHaloBreathe {
+  0%, 100% {
+    r: 12px;
+    opacity: 0.55;
+  }
+  50% {
+    r: 16px;
+    opacity: 0.95;
+  }
+}
+
+@keyframes planeSparklePulse {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* Reduced motion override: marker stays at destination, no animations */
+@media (prefers-reduced-motion: reduce) {
+  .route-delivery-marker {
+    transition: none !important;
+  }
+  .route-delivery-marker .marker-halo,
+  .route-delivery-marker .marker-plane-sparkle {
+    animation: none !important;
+  }
+}

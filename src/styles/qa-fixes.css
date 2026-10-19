@@ -1,0 +1,162 @@
+/* QA Audit Touch Target & Accessibility Refinements */
+
+/* 1. Minimum 44px tap target requirements across all interactive elements */
+.brand {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-nav nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.nav-mute-pill {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-actions .button,
+.button {
+  min-height: 44px;
+}
+
+.hero-scroll-cue {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nursery-mute-pill {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.secret-star {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-grid;
+  place-items: center;
+}
+
+.lullaby-wind-btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nightlight-pill {
+  min-height: 44px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.project-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.marker-toggle-pill {
+  min-height: 44px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--brown);
+  font: 10px/1 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.marker-toggle-pill:hover {
+  border-color: var(--berry);
+  color: var(--berry);
+}
+
+.dream-act-btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.falling-dream {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.final-star {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.story-scroll__dot {
+  position: relative;
+}
+
+.story-scroll__dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+}
+
+/* 2. Story scene visibility to prevent non-active overlap */
+.story-scroll__scene {
+  visibility: hidden;
+  transition: opacity .5s ease, visibility .5s ease;
+}
+
+.story-scroll__scene.active {
+  visibility: visible;
+}
+
+/* 3. Keyboard visible focus guarantees */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--berry) !important;
+  outline-offset: 3px !important;
+}
+
+.app.dream-mode a:focus-visible,
+.app.dream-mode button:focus-visible,
+.app.dream-mode [role="button"]:focus-visible,
+.app.dream-mode [tabindex]:focus-visible {
+  outline-color: var(--gold) !important;
+}
+
+/* 4. Keep anchor jumps clear of the fixed nursery header */
+html {
+  scroll-padding-top: 96px;
+}
+
+@media (max-width: 900px) {
+  html {
+    scroll-padding-top: 74px;
+  }
+}

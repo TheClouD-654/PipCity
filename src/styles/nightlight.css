@@ -1,0 +1,176 @@
+/* Nightlight Collection Ambient Lighting & Mood Styles */
+
+/* 1. Base App Ambient Lighting CSS Variables */
+.app {
+  --ambient-color: #f8f0e3;
+  --ambient-glow: rgba(216, 169, 78, 0.20);
+  --ambient-accent: #d8a94e;
+  --ambient-vignette: rgba(216, 169, 78, 0.10);
+  --ambient-wash-opacity: 0.45;
+  background-color: var(--ambient-color) !important;
+  transition: background-color 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.8s ease;
+}
+
+/* Day/Standard nursery ambient moods */
+.app[data-nightlight="rest"] {
+  --ambient-color: #f8f0e3;
+  --ambient-glow: rgba(216, 169, 78, 0.22);
+  --ambient-accent: #d8a94e;
+  --ambient-vignette: rgba(216, 169, 78, 0.10);
+  --ambient-wash-opacity: 0.45;
+}
+
+.app[data-nightlight="dream"] {
+  --ambient-color: #fcf4e5;
+  --ambient-glow: rgba(245, 185, 66, 0.32);
+  --ambient-accent: #f5b942;
+  --ambient-vignette: rgba(245, 185, 66, 0.16);
+  --ambient-wash-opacity: 0.65;
+}
+
+.app[data-nightlight="deep-sleep"] {
+  --ambient-color: #faede6;
+  --ambient-glow: rgba(240, 140, 75, 0.28);
+  --ambient-accent: #f08c4a;
+  --ambient-vignette: rgba(240, 140, 75, 0.15);
+  --ambient-wash-opacity: 0.65;
+}
+
+.app[data-nightlight="starlight"] {
+  --ambient-color: #f4eef9;
+  --ambient-glow: rgba(163, 140, 215, 0.26);
+  --ambient-accent: #9d84c6;
+  --ambient-vignette: rgba(163, 140, 215, 0.14);
+  --ambient-wash-opacity: 0.60;
+}
+
+/* Dream Mode compatibility: harmonious midnight palette + ambient colored wash */
+.app.dream-mode {
+  --ambient-color: #201b28;
+  --ambient-glow: rgba(216, 169, 78, 0.26);
+  --ambient-accent: #ffd978;
+  --ambient-vignette: rgba(216, 169, 78, 0.16);
+  --ambient-wash-opacity: 0.55;
+  background-color: var(--ambient-color) !important;
+}
+
+.app.dream-mode[data-nightlight="rest"] {
+  --ambient-color: #201b28;
+  --ambient-glow: rgba(216, 169, 78, 0.28);
+  --ambient-accent: #ffd978;
+  --ambient-vignette: rgba(216, 169, 78, 0.16);
+  --ambient-wash-opacity: 0.55;
+}
+
+.app.dream-mode[data-nightlight="dream"] {
+  --ambient-color: #231c2b;
+  --ambient-glow: rgba(255, 217, 120, 0.40);
+  --ambient-accent: #ffe082;
+  --ambient-vignette: rgba(255, 217, 120, 0.22);
+  --ambient-wash-opacity: 0.75;
+}
+
+.app.dream-mode[data-nightlight="deep-sleep"] {
+  --ambient-color: #261928;
+  --ambient-glow: rgba(240, 140, 75, 0.36);
+  --ambient-accent: #ffab76;
+  --ambient-vignette: rgba(225, 123, 158, 0.24);
+  --ambient-wash-opacity: 0.78;
+}
+
+.app.dream-mode[data-nightlight="starlight"] {
+  --ambient-color: #1a1728;
+  --ambient-glow: rgba(170, 145, 240, 0.38);
+  --ambient-accent: #c4b5fd;
+  --ambient-vignette: rgba(170, 145, 240, 0.25);
+  --ambient-wash-opacity: 0.82;
+}
+
+/* 2. Full-page Ambient Lighting Wash */
+.ambient-lighting-wash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    radial-gradient(circle at 74% 45%, var(--ambient-glow) 0%, transparent 68%),
+    radial-gradient(circle at 26% 75%, var(--ambient-vignette) 0%, transparent 60%);
+  opacity: var(--ambient-wash-opacity);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 3. Starlight Mood Specific Styles */
+.project-card.project-lantern.state-starlight {
+  border-color: rgba(163, 140, 215, 0.45);
+  box-shadow: 0 16px 44px -8px rgba(163, 140, 215, 0.2);
+}
+
+.lantern-ambient-atmosphere.glow-starlight {
+  opacity: 0.85;
+  background: radial-gradient(circle at 74% 50%, rgba(170, 145, 240, 0.32) 0%, rgba(163, 140, 215, 0.14) 48%, transparent 74%);
+}
+
+.app.dream-mode .lantern-ambient-atmosphere.glow-starlight {
+  opacity: 1;
+  background: radial-gradient(circle at 74% 50%, rgba(170, 145, 240, 0.44) 0%, rgba(163, 140, 215, 0.20) 48%, transparent 75%);
+}
+
+.lantern-status-dot.dot-starlight {
+  background: #9d84c6;
+  box-shadow: 0 0 0 4px rgba(157, 132, 198, 0.35), 0 0 8px rgba(157, 132, 198, 0.65);
+}
+
+.lantern-core-aura.aura-starlight {
+  opacity: 0.9;
+  transform: translate(-50%, -50%) scale(1.2);
+  background: radial-gradient(circle, rgba(200, 185, 255, 0.8) 0%, rgba(157, 132, 198, 0.32) 48%, transparent 74%);
+}
+
+.lantern-image.state-starlight {
+  filter: drop-shadow(0 0 42px rgba(170, 145, 240, 0.7)) drop-shadow(0 14px 28px rgba(92, 64, 51, 0.16)) brightness(1.08) hue-rotate(24deg);
+}
+
+/* Mood Selection Pills Row */
+.nightlight-mood-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.nightlight-pill {
+  font: 9px/1.2 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--brown-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nightlight-pill:hover {
+  border-color: var(--berry);
+  color: var(--berry);
+}
+
+.nightlight-pill.active {
+  background: var(--ambient-accent);
+  color: #ffffff;
+  border-color: var(--ambient-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-weight: 600;
+}
+
+/* Reduced motion override */
+@media (prefers-reduced-motion: reduce) {
+  .app,
+  .ambient-lighting-wash,
+  .lantern-ambient-atmosphere,
+  .lantern-core-aura,
+  .lantern-image {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,150 @@
+/* Pip Sleepy Expression (Tier 1 Check) & Overlay Styles */
+
+/* 1. Sleepy Closed-Eye Overlays */
+.pip-sleepy-expression {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.sleepy-eyelid {
+  position: absolute;
+  width: 34px;
+  height: 26px;
+  rotate: -10deg; 
+  opacity: 0;
+  transform: translate(-50%, -60%) scaleY(0.3);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+.eyelid-left {
+  left: calc(41.8% + 7.5px);
+  top: calc(39.1% + 7.5px);
+}
+
+.eyelid-right {
+  left: calc(58.8% + 7.5px);
+  top: calc(35.9% + 7.5px);
+}
+
+.eyelid-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 2px 4px rgba(43, 34, 48, 0.45));
+}
+
+.eyelid-arc-shadow {
+  fill: none;
+  stroke: rgba(43, 34, 48, 0.85);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+}
+
+.eyelid-arc-line {
+  fill: none;
+  stroke: #ffd978;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.eyelid-arc-highlight {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.6;
+}
+
+/* 2. Floating "zzz" in Dream Mode */
+.floating-zzz-group {
+  position: absolute;
+  top: 14%;
+  right: 28%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 7;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.zzz-char {
+  font-family: 'DM Mono', monospace;
+  font-weight: 700;
+  color: #ffd978;
+  text-shadow: 0 0 10px rgba(255, 217, 120, 0.9), 0 0 20px rgba(225, 123, 158, 0.6);
+  user-select: none;
+  opacity: 0;
+}
+
+.zzz-1 {
+  font-size: 13px;
+  animation: zzzFloatAnim 3.2s ease-in-out infinite 0s;
+}
+
+.zzz-2 {
+  font-size: 18px;
+  margin-left: 10px;
+  animation: zzzFloatAnim 3.2s ease-in-out infinite 1.05s;
+}
+
+.zzz-3 {
+  font-size: 24px;
+  margin-left: 20px;
+  animation: zzzFloatAnim 3.2s ease-in-out infinite 2.1s;
+}
+
+@keyframes zzzFloatAnim {
+  0% {
+    transform: translate(0, 0) scale(0.65) rotate(-6deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.95;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(22px, -36px) scale(1.2) rotate(8deg);
+    opacity: 0;
+  }
+}
+
+/* 3. Expression Activation in Dream Mode */
+.app.dream-mode .sleepy-eyelid {
+  opacity: 1;
+  transform: translate(-50%, -50%) scaleY(1);
+}
+
+.app.dream-mode .floating-zzz-group {
+  opacity: 1;
+}
+
+/* 4. Dimmer Eye Glints in Dream Mode */
+.app.dream-mode .eye-glint {
+  opacity: 0 !important;
+  box-shadow: 0 0 6px 1px rgba(255, 217, 120, 0.35) !important;
+  filter: brightness(0.7) blur(0.5px) !important;
+  transform: translate(var(--look-x, 0), var(--look-y, 0)) scale(0.65);
+}
+
+/* 5. Reduced Motion: Static Sleepy Expression, No Floating Animation */
+@media (prefers-reduced-motion: reduce) {
+  .sleepy-eyelid {
+    transition: none !important;
+  }
+  .zzz-char {
+    animation: none !important;
+    opacity: 0.85;
+    transform: none !important;
+  }
+  .floating-zzz-group {
+    transition: none !important;
+  }
+}

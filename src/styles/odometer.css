@@ -1,0 +1,235 @@
+/* Vintage Rolling-Digit CSS Odometer */
+.vintage-odometer {
+  position: relative;
+  background: color-mix(in srgb, var(--cream-deep) 85%, var(--paper));
+  border: 2px solid rgba(92, 64, 51, 0.22);
+  border-radius: 14px;
+  padding: 18px 24px;
+  max-width: 420px;
+  margin: 22px auto 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 8px 24px rgba(40, 25, 30, 0.08);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Stamped brass rivet corners */
+.vintage-odometer .rivet {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c99351;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 1px 1px rgba(255,255,255,0.4);
+}
+.vintage-odometer .rivet-tl { top: 7px; left: 7px; }
+.vintage-odometer .rivet-tr { top: 7px; right: 7px; }
+.vintage-odometer .rivet-bl { bottom: 7px; left: 7px; }
+.vintage-odometer .rivet-br { bottom: 7px; right: 7px; }
+
+.odometer-header {
+  margin-bottom: 12px;
+}
+
+.odometer-title {
+  display: block;
+  font: 11px/1.3 'DM Mono', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--berry);
+  margin-bottom: 2px;
+}
+
+.odometer-subtitle {
+  display: block;
+  font: 10px/1.3 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--brown-soft);
+}
+
+/* Mechanical Wheel Window */
+.odometer-housing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #18131d;
+  border: 2px solid #5c4033;
+  border-radius: 8px;
+  padding: 6px 10px;
+  box-shadow:
+    inset 0 4px 10px rgba(0, 0, 0, 0.8),
+    0 3px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 3D Cylindrical wheel vignette shadows (top and bottom) */
+.odometer-housing::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.odometer-housing::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.odometer-wheel {
+  width: 26px;
+  height: 40px;
+  overflow: hidden;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.odometer-wheel:last-child {
+  border-right: none;
+}
+
+.odometer-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+.odometer-digit {
+  height: 40px;
+  line-height: 40px;
+  font-family: 'DM Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff8f1;
+  text-align: center;
+  user-select: none;
+}
+
+/* Highlight the rightmost wheel with warm gold for vintage mechanical accent */
+.odometer-wheel:last-child .odometer-digit {
+  color: #ffd978;
+}
+
+.odometer-footnote {
+  display: block;
+  font: 9px/1.3 'DM Mono', monospace;
+  color: var(--brown-soft);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-top: 10px;
+}
+
+/* Compact version for hero footer */
+.odometer-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 9px;
+  background: color-mix(in srgb, var(--cream-deep) 65%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: 10px/1 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--brown-soft);
+}
+
+.odometer-compact-label {
+  color: var(--brown);
+}
+
+.odometer-compact-housing {
+  display: inline-flex;
+  align-items: center;
+  background: #18131d;
+  border: 1px solid rgba(92, 64, 51, 0.5);
+  border-radius: 4px;
+  padding: 2px 4px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.odometer-compact-housing::before,
+.odometer-compact-housing::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.odometer-compact-housing::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+}
+
+.odometer-compact-housing::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+}
+
+.odometer-compact-wheel {
+  width: 12px;
+  height: 16px;
+  overflow: hidden;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.odometer-compact-wheel:last-child {
+  border-right: none;
+}
+
+.odometer-compact-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+.odometer-compact-digit {
+  height: 16px;
+  line-height: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff8f1;
+  text-align: center;
+}
+
+.odometer-compact-wheel:last-child .odometer-compact-digit {
+  color: #ffd978;
+}
+
+.odometer-compact-tag {
+  font-size: 9px;
+  color: var(--brown-soft);
+  opacity: 0.85;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .odometer-strip,
+  .odometer-compact-strip {
+    transition: none !important;
+  }
+}

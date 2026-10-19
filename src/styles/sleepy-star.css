@@ -1,0 +1,48 @@
+/* Pip Sleepy Star Easter Egg (7-Tap Star) */
+
+/* Pip falls asleep for 6 seconds: dim eye glints, floating zzz, closed eyelids */
+.app.pip-asleep .sleepy-eyelid,
+.pip-stage.is-asleep .sleepy-eyelid {
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) scaleY(1) !important;
+}
+
+.app.pip-asleep .floating-zzz-group,
+.pip-stage.is-asleep .floating-zzz-group {
+  opacity: 1 !important;
+}
+
+.app.pip-asleep .eye-glint,
+.pip-stage.is-asleep .eye-glint {
+  opacity: 0.18 !important;
+  box-shadow: 0 0 4px 1px rgba(255, 217, 120, 0.25) !important;
+  filter: brightness(0.65) blur(0.5px) !important;
+  transform: translate(0px, 0px) scale(0.62) !important;
+}
+
+/* Gentle breathing movement while asleep */
+.pip-stage.is-asleep .pip-avatar {
+  animation: pipSleepyBreathe 3s ease-in-out infinite;
+}
+
+@keyframes pipSleepyBreathe {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Respect reduced motion: no breathing pulse, instant static expression */
+@media (prefers-reduced-motion: reduce) {
+  .pip-stage.is-asleep .pip-avatar {
+    animation: none !important;
+  }
+  .app.pip-asleep .sleepy-eyelid,
+  .pip-stage.is-asleep .sleepy-eyelid,
+  .app.pip-asleep .floating-zzz-group,
+  .pip-stage.is-asleep .floating-zzz-group {
+    transition: none !important;
+  }
+}

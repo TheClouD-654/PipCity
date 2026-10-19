@@ -1,0 +1,406 @@
+/* ═══ Story Scroll — a night that changes as you scroll ═══════════════
+   The scene visuals no longer live in a right-hand tableau. The whole
+   viewport is the backdrop: stars count themselves, a star falls, the
+   workshop drifts in, the moon rises. Everything is driven by --story-p
+   with no per-frame React work. */
+
+.story-scroll { --p: 0; padding: 0; }
+
+.story-scroll__rail { position: relative; height: 400svh; }
+
+.story-scroll__stage {
+  /* Set by JS every scroll frame */
+  --story-p: 0;
+  /* Per-scene 0→1 progress, derived in CSS */
+  --s0: clamp(0, calc(var(--story-p) * 4), 1);
+  --s1: clamp(0, calc(var(--story-p) * 4 - 1), 1);
+  --s2: clamp(0, calc(var(--story-p) * 4 - 2), 1);
+  --s3: clamp(0, calc(var(--story-p) * 4 - 3), 1);
+
+  position: sticky; top: 0; height: 100svh;
+  display: grid; place-items: center;
+  overflow: hidden;
+  background: #120e1a;
+  color: #fff2e8;
+  isolation: isolate;
+}
+
+/* ── Section header ── */
+.story-scroll__header {
+  position: absolute; top: 24px; left: 0; right: 0;
+  width: min(var(--max), calc(100% - 64px)); margin: 0 auto;
+  z-index: 6;
+  pointer-events: none;
+}
+.story-scroll__label {
+  font: 10px/1 'DM Mono', monospace;
+  text-transform: uppercase; letter-spacing: .14em;
+  color: #ffd978; margin: 0 0 8px;
+}
+.story-scroll__title {
+  font-size: clamp(34px, 4.6vw, 60px); line-height: .96;
+  max-width: 700px; margin: 0;
+  color: #fff6ea;
+  text-wrap: balance;
+}
+
+/* ── Scene copy ── */
+.story-scroll__scene {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 620px);
+  justify-content: start;
+  align-items: center;
+  gap: 40px;
+  padding: 130px max(32px, calc((100% - var(--max)) / 2)) 90px;
+  opacity: 0;
+  transform: translateY(22px);
+  pointer-events: none;
+  transition: opacity .55s ease, transform .55s cubic-bezier(.2, .8, .2, 1);
+  z-index: 2;
+}
+.story-scroll__scene.active { opacity: 1; transform: translateY(0); }
+
+/* Only the copy intercepts pointer events, so the 3D workshop objects
+   behind the scene can still be tilted with the mouse. */
+.story-scroll__copy {
+  max-width: 620px;
+  pointer-events: auto;
+}
+.story-scroll__scene-num {
+  font: 11px/1 'DM Mono', monospace; color: #ffd978;
+  text-transform: uppercase; letter-spacing: .16em; margin: 0 0 14px;
+}
+.story-scroll__scene-kicker {
+  margin: 0 0 10px;
+  font: 9px/1.2 'DM Mono', monospace; text-transform: uppercase;
+  letter-spacing: .16em; color: rgba(225, 123, 158, .95);
+}
+.story-scroll__scene-title {
+  font-size: clamp(38px, 5vw, 72px); margin: 0;
+  color: #fff6ea; line-height: .94;
+  text-shadow: 0 2px 30px rgba(10, 6, 16, .55);
+}
+.story-scroll__scene-text {
+  max-width: 500px; margin: 20px 0 0;
+  line-height: 1.85; color: rgba(255, 242, 232, .8);
+  font-size: 15.5px;
+  text-shadow: 0 1px 22px rgba(10, 6, 16, .7);
+}
+.story-scroll__scene-rule {
+  display: block; width: 74px; height: 1px; margin-top: 26px;
+  background: linear-gradient(90deg, #ffd978, rgba(255, 217, 120, 0));
+}
+
+/* ── Backdrop base ── */
+.story-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+
+.story-bg__sky {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 72% 104%, rgba(163, 64, 99, .4) 0%, transparent 56%),
+    radial-gradient(ellipse at 12% -6%, rgba(103, 78, 140, .3) 0%, transparent 58%),
+    linear-gradient(180deg, #0f0b17 0%, #1a1425 38%, #2a1d33 68%, #4a2c3e 100%);
+}
+.story-bg__sky::after {
+  content: '';
+  position: absolute; inset: auto 0 0; height: 58%;
+  background: radial-gradient(ellipse at 64% 108%, rgba(255, 217, 120, .3) 0%, transparent 62%);
+  opacity: clamp(0, calc(var(--s3) * 1.8), 1);
+}
+
+/* ── Stars ── */
+.story-bg__stars, .story-bg__heroes { position: absolute; inset: 0; }
+
+.story-bg__star {
+  position: absolute;
+  width: var(--size); height: var(--size);
+  border-radius: 50%;
+  background: #fff8e7;
+  box-shadow: 0 0 calc(4px + var(--size)) rgba(255, 240, 200, .8);
+  /* Reveal in bands across scene 01 */
+  opacity: clamp(0, calc(var(--s0) * 8 - var(--band) * 1.12 - .2), 1);
+  transform: translate3d(
+    calc(var(--story-p) * 64px * var(--depth)),
+    calc(var(--story-p) * -230px * var(--depth)),
+    0
+  );
+  animation: storyStarTwinkle var(--duration) ease-in-out infinite var(--delay);
+  will-change: transform, opacity;
+}
+@keyframes storyStarTwinkle {
+  0%, 100% { filter: brightness(.8); }
+  50% { filter: brightness(1.7); }
+}
+
+.story-bg__hero {
+  position: absolute;
+  line-height: 1;
+  color: #ffe8a6;
+  text-shadow:
+    0 0 12px rgba(255, 226, 150, .95),
+    0 0 42px rgba(255, 200, 100, .6);
+  /* One big star per scroll step through scene 01 */
+  opacity: clamp(0, calc(var(--s0) * 8 - var(--i) * 1.15 - .3), 1);
+  transform: translate3d(0, calc(var(--story-p) * -160px), 0)
+             scale(calc(.55 + var(--s0) * .55));
+  animation: storyHeroPulse 4.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes storyHeroPulse {
+  0%, 100% { filter: brightness(.92); }
+  50% { filter: brightness(1.35); }
+}
+
+/* ── Scene 02: falling star ── */
+.story-bg__fall {
+  position: absolute; inset: 0;
+  opacity: clamp(0, calc(var(--s1) * 6 - var(--s2) * 14), 1);
+  pointer-events: none;
+}
+.story-bg__meteor {
+  position: absolute;
+  left: calc(92% - var(--s1) * 30%);
+  top: calc(6% + var(--s1) * 56%);
+  width: 15px; height: 15px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffdf0 0%, #ffe6a0 52%, rgba(255, 200, 90, 0) 74%);
+  box-shadow:
+    0 0 26px 10px rgba(255, 222, 140, .8),
+    0 0 70px 26px rgba(255, 190, 80, .28);
+  transform: scale(calc(.6 + var(--s1) * .6));
+}
+.story-bg__trail {
+  position: absolute;
+  left: calc(92% - var(--s1) * 30%);
+  top: calc(6% + var(--s1) * 56%);
+  width: calc(26px + var(--s1) * 260px);
+  height: 3px;
+  background: linear-gradient(90deg, rgba(255, 250, 225, .95), rgba(255, 230, 160, .18) 68%, transparent);
+  transform-origin: left center;
+  transform: rotate(-58deg);
+  border-radius: 2px;
+}
+.story-bg__ripple {
+  position: absolute;
+  left: 62%; top: 62%;
+  border: 1.5px solid rgba(255, 220, 140, .6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(20px + clamp(0, calc(var(--s1) - .42), 1) * 340px);
+  aspect-ratio: 1;
+  opacity: clamp(0, calc(var(--s1) * 3 - 1.35), .6);
+}
+.story-bg__ripple--two {
+  width: calc(20px + clamp(0, calc(var(--s1) - .52), 1) * 240px);
+  border-color: rgba(225, 123, 158, .5);
+  opacity: clamp(0, calc(var(--s1) * 3 - 1.65), .55);
+}
+.story-bg__ripple--three {
+  width: calc(20px + clamp(0, calc(var(--s1) - .62), 1) * 160px);
+  opacity: clamp(0, calc(var(--s1) * 3 - 1.95), .5);
+}
+.story-bg__note {
+  position: absolute;
+  left: 62%; top: 62%;
+  font-size: clamp(44px, 5vw, 74px);
+  color: #ffe6a0;
+  opacity: clamp(0, calc(var(--s1) * 5 - 2.6), 1);
+  text-shadow: 0 0 30px rgba(255, 215, 120, .75);
+  transform:
+    translate(-50%, -50%)
+    translateY(calc(clamp(0, calc(var(--s1) - .55), 1) * -110px))
+    rotate(calc(var(--s1) * 10deg));
+}
+
+/* ── Scene 03: the workshop drifts in ── */
+.story-bg__workshop {
+  position: absolute; inset: 0;
+  opacity: clamp(0, calc(var(--s2) * 8 - var(--s3) * 16), 1);
+  transform: translateY(calc((1 - var(--s2)) * 60px));
+  will-change: opacity, transform;
+}
+.story-bg__warmth {
+  position: absolute;
+  right: -12%; bottom: -14%; width: 78%; height: 82%;
+  background:
+    radial-gradient(circle at 58% 62%, rgba(255, 194, 96, .34) 0%, rgba(163, 64, 99, .16) 46%, transparent 72%);
+  filter: blur(34px);
+}
+.story-bg__object { position: absolute; z-index: 2; }
+.story-bg__object--box {
+  right: 9%; top: 12%;
+  width: clamp(190px, 25vw, 340px);
+}
+.story-bg__object--lantern {
+  right: 23%; bottom: 11%;
+  width: clamp(150px, 19vw, 268px);
+}
+.story-bg__object img {
+  width: 100%; height: auto; display: block;
+  filter: drop-shadow(0 26px 46px rgba(0, 0, 0, .5));
+}
+
+/* ── Scene 04: moonrise ── */
+.story-bg__moonrise { position: absolute; inset: 0; pointer-events: none; }
+
+.story-bg__moon {
+  position: absolute;
+  left: 66%;
+  bottom: calc(-30% + var(--s3) * 46%);
+  width: clamp(240px, 32vw, 460px);
+  aspect-ratio: 1;
+  margin-left: calc(clamp(240px, 32vw, 460px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #fffdf0 0%, #ffedb5 48%, #f2cd86 100%);
+  box-shadow:
+    0 0 70px 26px rgba(255, 222, 150, .35),
+    0 0 190px 80px rgba(255, 200, 100, .16);
+  opacity: clamp(0, calc(var(--s3) * 2.2), 1);
+}
+
+.story-bg__roofs {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 26%;
+  opacity: clamp(0, calc(var(--s3) * 1.6), 1);
+}
+.story-bg__roof {
+  position: absolute; bottom: 0;
+  background: #150e1d;
+  transform: translateY(calc((1 - var(--s3)) * 40px));
+}
+.story-bg__roof--one {
+  left: 0; width: 31%; height: 72%;
+  clip-path: polygon(0 42%, 46% 0, 100% 42%, 100% 100%, 0 100%);
+  background: #1a1122;
+}
+.story-bg__roof--two {
+  right: 0; width: 27%; height: 56%;
+  clip-path: polygon(0 34%, 52% 0, 100% 34%, 100% 100%, 0 100%);
+  background: #130d1a;
+}
+.story-bg__roof--three {
+  left: 35%; width: 27%; height: 46%;
+  clip-path: polygon(50% 0, 100% 36%, 100% 100%, 0 100%, 0 36%);
+  background: #180f20;
+}
+.story-bg__window {
+  position: absolute;
+  left: 50%; top: 44%;
+  width: 26px; height: 34px;
+  transform: translateX(-50%);
+  border-radius: 8px 8px 2px 2px;
+  background: linear-gradient(180deg, #ffe9a8, #ffd978 60%, #e9a84c);
+  box-shadow: 0 0 18px 4px rgba(255, 217, 120, .55), 0 0 50px 14px rgba(255, 200, 100, .22);
+  opacity: clamp(0, calc(var(--s3) * 2.4 - .8), 1);
+}
+
+/* ── Progress cue + dots ── */
+.story-scroll__progress {
+  position: absolute; left: 50%; bottom: 22px; z-index: 7;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  pointer-events: none;
+}
+.story-scroll__progress-track {
+  display: block; width: 180px; height: 2px;
+  background: rgba(255, 242, 232, .18);
+  border-radius: 2px; overflow: hidden;
+}
+.story-scroll__progress-fill {
+  display: block; height: 100%;
+  width: calc(var(--story-p) * 100%);
+  background: #ffd978;
+  box-shadow: 0 0 10px rgba(255, 217, 120, .85);
+}
+.story-scroll__progress-label {
+  font: 11px/1 'DM Mono', monospace;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255, 242, 232, .8);
+  white-space: nowrap;
+}
+
+.story-scroll__dots {
+  position: absolute; right: 28px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 16px;
+  z-index: 8; list-style: none; margin: 0; padding: 0;
+}
+.story-scroll__dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: rgba(255, 242, 232, .12);
+  border: 1.5px solid rgba(255, 242, 232, .45);
+  cursor: pointer; padding: 0;
+  transition: background .3s ease, border-color .3s ease, transform .3s ease;
+}
+.story-scroll__dot:hover { transform: scale(1.3); border-color: #ffd978; }
+.story-scroll__dot.active {
+  background: #ffd978; border-color: #ffd978;
+  transform: scale(1.2);
+  box-shadow: 0 0 14px rgba(255, 217, 120, .55);
+}
+
+/* ── Vignette + readable-side veil ── */
+.story-scroll__vignette {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 7, 15, .72) 0%, rgba(10, 7, 15, .35) 36%, transparent 62%),
+    radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(0, 0, 0, .34) 100%);
+}
+
+/* ═══ Mobile / Reduced-motion: stacked cards ═══ */
+.story-scroll__fallback { display: none; }
+
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+  .story-scroll__rail { height: auto; }
+  .story-scroll__stage { display: none; }
+  .story-scroll__fallback {
+    display: block; padding: 48px 0 80px;
+    width: min(var(--max), calc(100% - 48px)); margin: 0 auto;
+  }
+  .story-scroll__fallback-header { margin-bottom: 36px; }
+  .story-scroll__fallback-label,
+  .story-scroll__fallback .story-scroll__label { color: var(--berry); }
+  .story-scroll__fallback .story-scroll__title { color: var(--brown); }
+  .story-scroll__fallback-card {
+    border-top: 1px solid var(--line);
+    padding: 28px 0; display: grid;
+    grid-template-columns: 42px 1fr; gap: 0 12px;
+    opacity: 0; transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .story-scroll__fallback-card.revealed { opacity: 1; transform: translateY(0); }
+  .story-scroll__fallback-num {
+    font: 11px/1 'DM Mono', monospace; color: var(--berry);
+    padding-top: 4px;
+  }
+  .story-scroll__fallback-kicker {
+    margin: 0 0 8px;
+    font: 9px/1.2 'DM Mono', monospace; text-transform: uppercase;
+    letter-spacing: .12em; color: var(--brown-soft);
+  }
+  .story-scroll__fallback-title {
+    font-size: clamp(28px, 7vw, 42px); margin: 0;
+    color: var(--brown);
+  }
+  .story-scroll__fallback-text {
+    margin: 10px 0 0; font-size: 14px;
+    line-height: 1.7; color: var(--brown-soft); max-width: 480px;
+  }
+  .story-scroll__fallback-glyph {
+    grid-column: 1 / -1; margin-top: 12px;
+    font-size: 48px; color: var(--pink); text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .story-scroll__fallback { padding: 36px 0 60px; }
+  .story-scroll__fallback-card { grid-template-columns: 32px 1fr; }
+  .story-scroll__fallback-title { font-size: clamp(24px, 8vw, 36px); }
+}
+
+/* Shorter desktop windows: keep the copy clear of the header and cue */
+@media (min-width: 769px) and (max-height: 720px) {
+  .story-scroll__scene { padding-top: 100px; padding-bottom: 70px; }
+  .story-scroll__scene-title { font-size: clamp(32px, 4vw, 52px); }
+  .story-scroll__scene-text { font-size: 14px; line-height: 1.7; }
+}

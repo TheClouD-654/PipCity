@@ -1,0 +1,135 @@
+/* Tilt3D Component Styles */
+
+.tilt3d-wrap {
+  position: relative;
+  perspective: 800px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+}
+
+.tilt3d-content {
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.18s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt3d-wrap:not(:hover) .tilt3d-content {
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Subtle light sheen overlay.
+   Masked to the alpha edges of the PNG art so it never shows as a
+   hard-edged white square over dark panels on hover. */
+.tilt3d-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mask-image: var(--tilt3d-art-mask, none);
+  -webkit-mask-image: var(--tilt3d-art-mask, none);
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.tilt3d-wrap:hover .tilt3d-sheen {
+  opacity: 1;
+}
+
+/* Radial glow behind the object */
+.tilt3d-glow {
+  position: absolute;
+  inset: -20% -15%;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(20px);
+  transition: opacity 0.6s ease;
+}
+
+/* Soft elliptical contact shadow under the object */
+.tilt3d-shadow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 65%;
+  height: 14px;
+  transform: translateX(-50%) translateX(var(--shadow-x, 0px)) translateY(var(--shadow-y, 0px));
+  background: radial-gradient(ellipse at 50% 50%, rgba(60, 40, 30, 0.18) 0%, transparent 72%);
+  filter: blur(var(--shadow-blur, 12px));
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 0.18s ease-out, filter 0.18s ease-out;
+}
+
+.tilt3d-wrap:not(:hover) .tilt3d-shadow {
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.45s ease;
+}
+
+/* Idle float animation (~6px, 4.5s loop) */
+.tilt3d--float .tilt3d-content {
+  animation: tilt3dFloat 4.5s ease-in-out infinite;
+}
+
+@keyframes tilt3dFloat {
+  0%, 100% {
+    transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(0);
+  }
+  50% {
+    transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-6px);
+  }
+}
+
+/* Float the shadow in sync */
+.tilt3d--float .tilt3d-shadow {
+  animation: tilt3dShadowFloat 4.5s ease-in-out infinite;
+}
+
+@keyframes tilt3dShadowFloat {
+  0%, 100% {
+    opacity: 1;
+    transform: translateX(-50%) translateX(var(--shadow-x, 0px)) translateY(var(--shadow-y, 0px)) scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateX(-50%) translateX(var(--shadow-x, 0px)) translateY(var(--shadow-y, 0px)) scale(1.12);
+    filter: blur(16px);
+  }
+}
+
+/* Dream mode: stronger glow for lantern */
+.app.dream-mode .tilt3d-glow {
+  opacity: 0.85 !important;
+  filter: blur(28px);
+}
+
+/* Reduced motion: no tilt, no float, static shadow */
+@media (prefers-reduced-motion: reduce) {
+  .tilt3d-content {
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .tilt3d-shadow {
+    animation: none !important;
+    transition: none !important;
+  }
+  .tilt3d-sheen {
+    display: none;
+  }
+}

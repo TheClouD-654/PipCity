@@ -1,0 +1,98 @@
+/* Credits Block Styles - Pip's PipCity */
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px 36px 40px;
+  border-top: 1px solid var(--line);
+  color: var(--brown-soft);
+}
+
+.footer-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font: 9px 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.credits-block {
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--paper) 75%, transparent);
+  border: 1px solid var(--line);
+  transition: border-color .3s ease, background .3s ease;
+}
+
+.credits-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.credits-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 11px/1 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--berry);
+  font-weight: 600;
+}
+
+.credits-badge::before {
+  content: '✦';
+  font-size: 10px;
+  color: var(--gold);
+}
+
+.credits-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px 28px;
+}
+
+.credits-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--brown-soft);
+}
+
+.credits-label {
+  font: 10px/1.2 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--brown);
+  font-weight: 600;
+}
+
+.credits-detail {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--brown-soft);
+}
+
+@media (max-width: 680px) {
+  .site-footer {
+    padding: 24px 18px 32px;
+    gap: 16px;
+  }
+  .footer-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .credits-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

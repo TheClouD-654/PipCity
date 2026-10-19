@@ -1,0 +1,104 @@
+/* Prominent Mute Button Controls */
+.nursery-mute-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--cream-deep) 80%, var(--paper));
+  border: 1px solid rgba(92, 64, 51, 0.2);
+  border-radius: 999px;
+  color: var(--brown);
+  font: 11px/1 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(.2, .8, .2, 1);
+  box-shadow: 0 2px 6px rgba(40, 25, 30, 0.05);
+}
+
+.nursery-mute-pill:hover {
+  background: color-mix(in srgb, var(--cream-deep) 50%, var(--pink-soft));
+  border-color: var(--berry);
+  color: var(--berry);
+  transform: translateY(-1px);
+}
+
+.nursery-mute-pill:focus-visible {
+  outline: 2px solid var(--berry);
+  outline-offset: 2px;
+}
+
+.nursery-mute-pill.is-audible {
+  border-color: rgba(163, 64, 99, 0.32);
+}
+
+.nursery-mute-pill.is-audible .mute-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f6c445;
+  box-shadow: 0 0 6px #f6c445;
+  display: inline-block;
+  animation: pulse-mute-dot 2.2s infinite ease-in-out;
+}
+
+@keyframes pulse-mute-dot {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+.nursery-mute-pill.is-muted {
+  opacity: 0.78;
+  border-style: dashed;
+  color: var(--brown-soft);
+  background: color-mix(in srgb, var(--cream-deep) 40%, transparent);
+}
+
+/* Nav header mute button */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: end;
+}
+
+.nav-mute-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--cream-deep) 70%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--brown);
+  font: 10px/1 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.nav-mute-pill:hover {
+  border-color: var(--berry);
+  color: var(--berry);
+}
+
+.nav-mute-pill:focus-visible {
+  outline: 2px solid var(--berry);
+  outline-offset: 2px;
+}
+
+.nav-mute-pill.is-muted {
+  opacity: 0.75;
+  border-style: dashed;
+  color: var(--brown-soft);
+}
+
+@media (max-width: 640px) {
+  .nav-mute-pill span {
+    display: none;
+  }
+  .nav-mute-pill {
+    padding: 6px 8px;
+  }
+}
