@@ -1,4 +1,4 @@
-# Pip — Midnight Nursery ☾
+# Pip — PipCity
 
 > **haX.baby "Baby's First Website" Hackathon — Track 1: Pip the Skull Baby**  
 > *A cozy, handcrafted midnight nursery portfolio for a Junior Dream Engineer.*
